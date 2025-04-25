@@ -1,0 +1,19 @@
+name: Dispatch Homebrew Update
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  dispatch-homebrew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send repository_dispatch event to homebrew-brew
+        env:
+          GITHUB_TOKEN: ${{ secrets.HOMEBREW_BREW_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            https://api.github.com/repos/uname-n/homebrew-brew/dispatches \
+            -d '{"event_type":"git-issue-release"}'
