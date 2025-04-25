@@ -14,4 +14,4 @@ brew install uname-n/brew/git-issue
 ```
 
 #### Cline
-Add [`git-issue`](/git-issue) to the `.clinerules` folder of your project.
+Add [`git-issue`](/.clinerules/git-issue) to the `.clinerules` folder of your project.

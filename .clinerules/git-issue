@@ -35,6 +35,41 @@
 - Reference issue IDs in commits (e.g., "Fix #001")
 - Use `plan` for features/epics/sprints
 
+## Implementation Requirement for Closing Issues
+
+- **Issues and Sub-Issue may not be closed unless the task described in its title and content has been fully implemented in the codebase.**
+- Before closing, verify that all code, documentation, and deliverables for the issue are present and meet the acceptance criteria.
+- If the implementation is not present or incomplete, the issue must remain open, regardless of planning or review status.
+- Closing an issue without implementation is considered a violation of this rule.
+
+## Guidelines for Creating Well-Formatted, Descriptive Issues
+
+- **Title:** Use a concise, action-oriented summary of the task or problem.
+- **Description:** Clearly explain the context, requirements, and expected outcome.
+- **Acceptance Criteria:** List specific, testable conditions that must be met for the issue to be considered complete.
+- **References:** Link to related issues, documentation, or code as needed.
+- **Checklist (optional):** For complex issues, include a checklist of subtasks.
+
+### Issue Template Example
+
+```
+# Title
+Short, descriptive summary of the issue
+
+## Description
+- What is the problem or task?
+- Why is it important?
+- Any relevant background/context?
+
+## Acceptance Criteria
+- [ ] Condition 1
+- [ ] Condition 2
+
+## References
+- Related issues: #001, #002
+- Documentation: [link]
+```
+
 ## Issue Lifecycle
 
 1. Creation (open)

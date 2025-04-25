@@ -3,4 +3,3 @@ git-issue-test
 target/
 .issues
 .clineignore
-.clinerules
