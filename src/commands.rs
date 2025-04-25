@@ -101,17 +101,15 @@ pub fn list(args: crate::LsArgs) -> Result<()> {
         if let Some(mut children) = children_map.remove(&root.id) {
             children.sort_by_key(|c| c.id.clone());
             for child in children {
-                let indent = "    ";
                 let base = if !child.labels.is_empty() {
                     format!(
-                        "{}{} | {} - {}",
-                        indent,
+                        "{} | {} - {}",
                         child.id,
                         child.title,
                         child.labels.join(",")
                     )
                 } else {
-                    format!("{}{} | {}", indent, child.id, child.title)
+                    format!("{} | {}", child.id, child.title)
                 };
                 if child.state == State::Closed {
                     println!("{} [closed]", base);
@@ -213,5 +211,83 @@ pub fn reopen(id: &str, message: &str) -> Result<()> {
     issue.comments.push(entry);
     save(&issue)?;
     println!("{} | <<< {}", id, message);
+    Ok(())
+}
+
+/*
+// JSON schema for the plan command:
+// {
+//   "title": "Parent Issue Title",
+//   "content": "Parent issue description.",
+//   "labels": ["feature", "batch"],
+//   "sub_issues": [
+//     {
+//       "title": "Sub-issue 1",
+//       "content": "Details for sub-issue 1.",
+//       "labels": ["bug"]
+//     },
+//     ...
+//   ]
+// }
+*/
+
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+pub struct IssueSpec {
+    pub title: String,
+    pub content: String,
+    pub labels: Option<Vec<String>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct PlanSpec {
+    pub title: String,
+    pub content: String,
+    pub labels: Option<Vec<String>>,
+    pub sub_issues: Vec<IssueSpec>,
+}
+
+// Implementation for the plan command
+pub fn plan(args: crate::PlanArgs) -> Result<()> {
+    use std::io::Read;
+
+    // Read JSON input from file or inline
+    let json_str = if let Some(path) = args.file {
+        let mut file = std::fs::File::open(&path)?;
+        let mut buf = String::new();
+        file.read_to_string(&mut buf)?;
+        buf
+    } else if let Some(json) = args.json {
+        json
+    } else {
+        anyhow::bail!("No JSON input provided. Use --file or --json.");
+    };
+
+    // Parse JSON into PlanSpec
+    let plan: PlanSpec = serde_json::from_str(&json_str)
+        .map_err(|e| anyhow::anyhow!("Failed to parse plan JSON: {}", e))?;
+
+    // Create parent issue
+    let parent_args = crate::CreateArgs {
+        parent: None,
+        title: plan.title.clone(),
+        content: plan.content.clone(),
+        label: plan.labels.clone(),
+    };
+    let parent_issue = crate::commands::create(parent_args)?;
+    let parent_id = parent_issue.id.clone();
+
+    // Create sub-issues
+    for sub in &plan.sub_issues {
+        let sub_args = crate::CreateArgs {
+            parent: Some(parent_id.clone()),
+            title: sub.title.clone(),
+            content: sub.content.clone(),
+            label: sub.labels.clone(),
+        };
+        let _ = crate::commands::create(sub_args)?;
+    }
+
     Ok(())
 }

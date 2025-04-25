@@ -9,6 +9,44 @@ fn setup_temp_dir() -> tempfile::TempDir {
 }
 
 #[test]
+fn test_plan_command_inline_json() {
+    let temp = setup_temp_dir();
+    let issues_dir = temp.path().join(".issues");
+    fs::create_dir_all(&issues_dir).unwrap();
+
+    let plan_json = r#"{
+        "title": "Inline Parent Issue",
+        "content": "Parent created via inline JSON.",
+        "labels": ["inline", "plan"],
+        "sub_issues": [
+            {
+                "title": "Inline Sub-issue 1",
+                "content": "First inline sub-issue.",
+                "labels": ["inline"]
+            },
+            {
+                "title": "Inline Sub-issue 2",
+                "content": "Second inline sub-issue.",
+                "labels": ["inline"]
+            }
+        ]
+    }"#;
+
+    let mut cmd = Command::cargo_bin("git-issue").unwrap();
+    cmd.current_dir(&temp)
+        .args(&["plan", "--json", plan_json]);
+    cmd.assert().success();
+
+    // List issues to verify creation
+    let mut cmd = Command::cargo_bin("git-issue").unwrap();
+    cmd.current_dir(&temp).arg("ls");
+    cmd.assert().success()
+        .stdout(predicate::str::contains("Inline Parent Issue"))
+        .stdout(predicate::str::contains("Inline Sub-issue 1"))
+        .stdout(predicate::str::contains("Inline Sub-issue 2"));
+}
+
+#[test]
 fn test_full_usage_example_smoke() {
     let temp = setup_temp_dir();
     let issues_dir = temp.path().join(".issues");

@@ -29,6 +29,8 @@ enum Commands {
     Reopen(git_issue::CloseArgs),
     /// Show write-only audit trail
     Log(git_issue::LogArgs),
+    /// Batch create issues and sub-issues from JSON
+    Plan(git_issue::PlanArgs),
 }
 
 
@@ -58,6 +60,17 @@ fn main() -> Result<()> {
             append_log(&format!("REOPEN id={} msg={}", args.id, args.message))?;
         }
         Commands::Log(args) => show_log(args.limit)?,
+        Commands::Plan(args) => {
+            commands::plan(args.clone())?;
+            let source = if let Some(ref file) = args.file {
+                format!("file={}", file.display())
+            } else if let Some(ref json) = args.json {
+                format!("inline_json ({} chars)", json.len())
+            } else {
+                "no input".to_string()
+            };
+            append_log(&format!("PLAN source={}", source))?;
+        }
     }
 
     Ok(())

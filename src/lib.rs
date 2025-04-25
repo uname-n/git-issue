@@ -61,3 +61,13 @@ pub struct LogArgs {
     #[arg(short, long)]
     pub limit: Option<usize>,
 }
+
+#[derive(Args, Debug, Clone)]
+pub struct PlanArgs {
+    /// Path to JSON file describing the plan
+    #[arg(short = 'f', long)]
+    pub file: Option<std::path::PathBuf>,
+    /// Inline JSON string describing the plan
+    #[arg(short = 'j', long)]
+    pub json: Option<String>,
+}
