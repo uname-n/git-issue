@@ -3,22 +3,22 @@
 ## Core Usage
 
 - Create issue:  
-  `git-issue create --title "Title" --content "Description" [--label label1,label2] [--parent PARENT_ID]`
+  `git issue create --title "Title" --content "Description" [--label label1,label2] [--parent PARENT_ID]`
 - List issues:  
-  `git-issue ls [--state all|closed] [--label bug] [--order desc]`
+  `git issue ls [--state all|closed] [--label bug] [--order desc]`
 - View issue:  
-  `git-issue view ISSUE_ID`
+  `git issue view ISSUE_ID`
 - Comment:  
-  `git-issue comment ISSUE_ID --message "Comment"`
+  `git issue comment ISSUE_ID --message "Comment"`
 - Close/reopen:  
-  `git-issue close|reopen ISSUE_ID --message "Reason"`
+  `git issue close|reopen ISSUE_ID --message "Reason"`
 - Audit log:  
-  `git-issue log [--limit N]`
+  `git issue log [--limit N]`
 
 ## Batch Issue Creation (`plan`)
 
 - Batch-create parent + sub-issues from JSON:  
-  `git-issue plan --json '{"title":"Parent","content":"Desc","labels":["feature"],"sub_issues":[{"title":"Sub1","content":"Sub1 desc"}]}'`
+  `git issue plan --json '{"title":"Parent","content":"Desc","labels":["feature"],"sub_issues":[{"title":"Sub1","content":"Sub1 desc"}]}'`
 - JSON:  
   - `title`, `content` required for parent & sub-issues
   - `labels` optional
