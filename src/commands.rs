@@ -249,7 +249,7 @@ pub struct PlanSpec {
 }
 
 // Implementation for the plan command
-pub fn plan(args: crate::PlanArgs) -> Result<()> {
+pub fn plan(args: crate::PlanArgs) -> Result<(String, String)> {
     use std::io::Read;
 
     // Read JSON input from file or inline
@@ -277,6 +277,7 @@ pub fn plan(args: crate::PlanArgs) -> Result<()> {
     };
     let parent_issue = crate::commands::create(parent_args)?;
     let parent_id = parent_issue.id.clone();
+    let parent_title = parent_issue.title.clone();
 
     // Create sub-issues
     for sub in &plan.sub_issues {
@@ -289,5 +290,5 @@ pub fn plan(args: crate::PlanArgs) -> Result<()> {
         let _ = crate::commands::create(sub_args)?;
     }
 
-    Ok(())
+    Ok((parent_id, parent_title))
 }

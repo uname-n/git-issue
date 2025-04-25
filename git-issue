@@ -1,0 +1,57 @@
+# git-issue CLI: Rules & Best Practices
+
+## Core Usage
+
+- Create issue:  
+  `git-issue create --title "Title" --content "Description" [--label label1,label2] [--parent PARENT_ID]`
+- List issues:  
+  `git-issue ls [--state all|closed] [--label bug] [--order desc]`
+- View issue:  
+  `git-issue view ISSUE_ID`
+- Comment:  
+  `git-issue comment ISSUE_ID --message "Comment"`
+- Close/reopen:  
+  `git-issue close|reopen ISSUE_ID --message "Reason"`
+- Audit log:  
+  `git-issue log [--limit N]`
+
+## Batch Issue Creation (`plan`)
+
+- Batch-create parent + sub-issues from JSON:  
+  `git-issue plan --json '{"title":"Parent","content":"Desc","labels":["feature"],"sub_issues":[{"title":"Sub1","content":"Sub1 desc"}]}'`
+- JSON:  
+  - `title`, `content` required for parent & sub-issues
+  - `labels` optional
+- Troubleshooting:  
+  - "No JSON input": use `--json` or `--file`
+  - "Failed to parse": check JSON syntax/fields
+
+## Best Practices
+
+- Use clear, descriptive titles and detailed content
+- Apply consistent labels (e.g., bug, enhancement)
+- Break complex tasks into sub-issues
+- Add meaningful comments and closing messages
+- Reference issue IDs in commits (e.g., "Fix #001")
+- Use `plan` for features/epics/sprints
+
+## Issue Lifecycle
+
+1. Creation (open)
+2. Discussion (comments)
+3. Implementation (sub-issues)
+4. Planning (`plan`)
+5. Resolution (close with message)
+6. Verification (reopen if needed)
+
+## TDD Integration
+
+- Parent issues for features, sub-issues for test cases
+- Use labels for test types (unit, integration, e2e)
+- Track progress via comments and issue states
+
+## Limitations
+
+- No attachments/images, notifications, or visualization
+- All sub-issues must be closed before parent
+- All IDs must be in the three digit format with leading 0s. 001 for issues, 001-001 for sub-issues.

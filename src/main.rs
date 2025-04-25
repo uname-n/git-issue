@@ -61,15 +61,8 @@ fn main() -> Result<()> {
         }
         Commands::Log(args) => show_log(args.limit)?,
         Commands::Plan(args) => {
-            commands::plan(args.clone())?;
-            let source = if let Some(ref file) = args.file {
-                format!("file={}", file.display())
-            } else if let Some(ref json) = args.json {
-                format!("inline_json ({} chars)", json.len())
-            } else {
-                "no input".to_string()
-            };
-            append_log(&format!("PLAN source={}", source))?;
+            let (parent_id, parent_title) = commands::plan(args.clone())?;
+            append_log(&format!("PLAN parent_id={} parent_title={}", parent_id, parent_title))?;
         }
     }
 
