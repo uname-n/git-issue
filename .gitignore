@@ -1,0 +1,6 @@
+_archive
+git-issue-test
+target/
+.issues
+.clineignore
+.clinerules
