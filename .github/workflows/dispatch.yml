@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Send repository_dispatch event to homebrew-brew
         env:
-          GITHUB_TOKEN: ${{ secrets.HOMEBREW_BREW_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github+json" \
